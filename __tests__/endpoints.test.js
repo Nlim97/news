@@ -37,5 +37,36 @@ describe("/api", () => {
         })
      })
 })
+describe("/api/articles/:article_id", () => {
+    test(`Get 200 an an article object containing the following properties: 
+    author, title, article_id, body, topic, created_at, votes, article_img_url`, () => {
+        return request(app).get("/api/articles/2").expect(200)
+        .then((res) => {
+            const  {article } = res.body
+            expect(typeof article.article_id).toBe("number");
+            expect(typeof article.title).toBe("string");
+            expect(typeof article.topic).toBe("string");
+            expect(typeof article.author).toBe("string");
+            expect(typeof article.created_at).toBe("string");
+            expect(typeof article.body).toBe('string');
+            expect(typeof article.votes).toBe("number");
+            expect(typeof article.article_img_url).toBe("string");
+        })
+    })
+    test('Get 400 and a message for bad request if the the id is invalid', () => {
+        return request(app).get("/api/articles/abcd").expect(400)
+        .then((res) => {
+            const { msg } = res.body
+            expect(msg).toBe('Bad request')
+        })
+    })
+    test('Get 404 and a message of no article found if the id is a number but not a valid article_id', () => {
+        return request(app).get("/api/articles/9999999").expect(404)
+        .then((res) => {
+            const { msg } = res.body
+            expect(msg).toBe('article does not exist')
+        })
+    })
+})
 
 
