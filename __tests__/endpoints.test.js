@@ -21,5 +21,21 @@ describe("/api/topics", () => {
         })
     })
 })
+describe("/api", () => {
+    test(`Get 200 and a JSON object containing all the endpoint's 
+     queries, description, request body format and a response example`, () => {
+        return request(app).get("/api").expect(200)
+        .then((res) => {
+            const endpoints = res.body
+            expect(typeof endpoints).toBe('object')
+            for(const endpoint in endpoints.parsedData){
+                expect(typeof endpoints.parsedData[endpoint].description).toBe('string');
+                expect(typeof endpoints.parsedData[endpoint].queries).toBe('object');
+                expect(typeof endpoints.parsedData[endpoint].exampleResponse).toBe('object');
+                
+            }
+        })
+     })
+})
 
 
