@@ -68,5 +68,25 @@ describe("/api/articles/:article_id", () => {
         })
     })
 })
+describe('/api/articles', () => {
+    test.only('Get 200 an check if the articles are order by created_at in descending order', () => {
+        return request(app).get('/api/articles?order=desc').expect(200)
+        .then((res) => {
+            const { articles } = res.body
+            expect(articles.length).toBe(13)
+            articles.forEach((article) => {
+                expect(typeof article.author).toBe('string');
+                expect(typeof article.title).toBe("string");
+                expect(typeof article.article_id).toBe("number");
+                expect(typeof article.topic).toBe("string");
+                expect(typeof article.created_at).toBe("string");
+                expect(typeof article.votes).toBe("number");
+                expect(typeof article.article_img_url).toBe("string");
+                expect(typeof article.comment_count).toBe('string');
+                expect(articles).toBeSortedBy('created_at', { descending: true });
+            })
+        })
+    })
+})
 
 
