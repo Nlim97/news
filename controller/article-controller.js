@@ -13,7 +13,6 @@ function getArticleById(request, response, next){
 function getArticle(request, response, next){
     const { order } = request.query
     const isOrder = order.toUpperCase()
-    console.log(isOrder)
     fetchArticle(isOrder).then((articles) => {
         response.status(200).send({articles})
     }).catch((err) => {
