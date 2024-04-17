@@ -69,7 +69,7 @@ describe("/api/articles/:article_id", () => {
     })
 })
 describe('/api/articles', () => {
-    test.only('Get 200 an check if the articles are order by created_at in descending order', () => {
+    test('Get 200 an check if the articles are order by created_at in descending order', () => {
         return request(app).get('/api/articles?order=desc').expect(200)
         .then((res) => {
             const { articles } = res.body
@@ -88,5 +88,38 @@ describe('/api/articles', () => {
         })
     })
 })
+describe('/api/articles/:article_id/comments', () => {
+    test('200 with all the comment in ascending order related to the article.article_id', () => {
+        return request(app).get('/api/articles/3/comments').expect(200)
+        .then((res) => {
+            const comments = res.body
+            expect(comments.length).toBe(2)
+            expect(comments).toBeSortedBy('created_at', { ascending: true })
+            comments.forEach((comment) => {
+                expect(typeof comment.comment_id).toBe('number')
+                expect(typeof comment.votes).toBe('number')
+                expect(typeof comment.created_at).toBe('string')
+                expect(typeof comment.author).toBe('string')
+                expect(typeof comment.body).toBe('string')
+                expect(typeof comment.article_id).toBe('number')
+            })
+        })
+    })
+    test(`404 with a message of 'Article does not exist' if a numerical value does not match with any artist_id`, () => {
+        return request(app).get('/api/articles/99999/comments').expect(404)
+        .then((res) => {
+            const { msg } = res.body
+            expect(msg).toBe('Article does not exist')
+        })
+    })
+    test(`400 with a message of 'Bad request' if an invalid article_id is provided`, () => {
+        return request(app).get('/api/articles/abcd/comments').expect(400)
+        .then((res) => {
+            const { msg } = res.body
+            expect(msg).toBe('Bad request')
+        })
+    })
+})
+
 
 
