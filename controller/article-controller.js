@@ -1,4 +1,4 @@
-const {fetchArticleById, fetchArticle} = require("../model/article.model")
+const {fetchArticleById, fetchArticle, changeVotesInArticle} = require("../model/article.model")
 
 
 function getArticleById(request, response, next){
@@ -20,5 +20,15 @@ function getArticle(request, response, next){
     })
 }
 
+function patchArticleById(request, response, next){
+    const { article_id } = request.params
+    const { inc_votes } = request.body
+    changeVotesInArticle(article_id, inc_votes).then((article) => {
+        response.status(200).send({article})
+    }).catch((err) => {
+        next(err)
+    })
+}
 
-module.exports = {getArticleById, getArticle};
+
+module.exports = {getArticleById, getArticle, patchArticleById};

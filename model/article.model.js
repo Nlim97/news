@@ -21,5 +21,16 @@ function fetchArticle(order){
     })
 }
 
+function changeVotesInArticle(id, num){
+    return db.query(`UPDATE articles SET votes = votes + $1 WHERE articles.article_id = $2 RETURNING *`, [num, id])
+    .then((article) => {
+        if(article.rows.length === 0){
+            return Promise.reject({status: 404, msg: 'Article does not exist'})
+        }
+        return article.rows[0]
+    })
+}
 
-module.exports = {fetchArticleById, fetchArticle}
+
+
+module.exports = {fetchArticleById, fetchArticle, changeVotesInArticle}

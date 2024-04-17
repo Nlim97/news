@@ -150,6 +150,55 @@ describe('/api/articles/:article_id/comments', () => {
         })
     })
 })
+describe('Patch: /api/articles/:article_id', () => {
+    test(`200 and a article object with the votes updated in regards to the patch object being sent`, () => {
+        const patchObj = {
+            inc_votes: 5
+        }
+        return request(app).patch('/api/articles/2').send(patchObj)
+        .expect(200)
+        .then((res) => {
+            const { article } = res.body
+            expect(article.article_id).toBe(2)
+            expect(article.votes).toBe(5)
+        })
+    })
+    test('200 and a article object with the votes decreased', () => {
+        const patchObj = {
+            inc_votes: -50
+        }
+        return request(app).patch('/api/articles/1').send(patchObj)
+        .expect(200)
+        .then((res) => {
+            const { article } = res.body
+            expect(article.article_id).toBe(1)
+            expect(article.votes).toBe(50)
+        })
+    })
+    test(`404 with message 'Article does not exist' if a number is provided but is an invalid article_id`, () => {
+        const patchObj = {
+            inc_votes: 5
+        }
+        return request(app).patch('/api/articles/9999').send(patchObj)
+        .expect(404)
+        .then((res) => {
+            const { msg } = res.body
+            expect(msg).toBe('Article does not exist')
+        })
+    })
+    test(`400 with message "Bad request" if an invalid article_id is provided i.e. abcd`, () => {
+        const patchObj = {
+            inc_votes: 5
+        }
+        return request(app).patch('/api/articles/abcd').send(patchObj)
+        .expect(400)
+        .then((res) => {
+            const { msg } = res.body
+            expect(msg).toBe('Bad request')
+        })
+    })
+})
+
 
 
 
