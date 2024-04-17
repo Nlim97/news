@@ -10,4 +10,18 @@ function fetchCommentsByArticleID(id){
     })
 }
 
-module.exports = {fetchCommentsByArticleID}
+function createCommentByArticleId(id, obj){
+    const { username, body} = obj
+    const created_at = new Date()
+    return db.query(`INSERT INTO comments 
+    (body, votes, author, article_id, created_at)
+    VALUES 
+    ($1, $2, $3, $4, $5) 
+    RETURNING body, votes, author, article_id, created_at;`, [body, 0, username, id, created_at])
+    .then((comment) => {
+        return comment.rows[0]
+    })
+}
+
+
+module.exports = {fetchCommentsByArticleID, createCommentByArticleId}

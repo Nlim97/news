@@ -119,6 +119,36 @@ describe('/api/articles/:article_id/comments', () => {
             expect(msg).toBe('Bad request')
         })
     })
+    test(`201 with a response object of the posted comment`, () => {
+        const sentComment = {
+            username: `lurker`,
+            body: `I like krabby patties`
+        };
+        return request(app)
+        .post("/api/articles/3/comments").send(sentComment)
+        .expect(201)
+        .then((res) => {
+            const { newComment } = res.body
+            expect(typeof newComment.body).toBe('string')
+            expect(typeof newComment.author).toBe('string')
+            expect(typeof newComment.article_id).toBe('number')
+            expect(typeof newComment.votes).toBe('number')
+            expect(typeof newComment.created_at).toBe('string')
+        })
+    })
+    test(`404 with a message of Author not found if username is not valid`, () => {
+        const sentComment = {
+            username: `spondebob`,
+            body: `I like krabby patties`
+        };
+        return request(app)
+        .post("/api/articles/3/comments").send(sentComment)
+        .expect(404)
+        .then((res) => {
+            const { msg } = res.body
+            expect(msg).toBe('Author not found')
+        })
+    })
 })
 
 
