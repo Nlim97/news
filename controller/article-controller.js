@@ -11,13 +11,20 @@ function getArticleById(request, response, next){
 }
 
 function getArticle(request, response, next){
-    const { order } = request.query
-    const isOrder = order.toUpperCase()
-    fetchArticle(isOrder).then((articles) => {
-        response.status(200).send({articles})
+    const { topic } = request.query
+    if(Object.keys(request.query).length === 0){
+        fetchArticle().then((articles) => {
+            response.status(200).send({articles})
+        }).catch((err) => {
+            next(err)
+        })
+    }
+    fetchArticle(topic).then((articles) => {
+        response.status(200).send(articles)
     }).catch((err) => {
         next(err)
     })
+    
 }
 
 function patchArticleById(request, response, next){
