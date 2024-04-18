@@ -74,5 +74,35 @@
 
       ]
     }
+  },
+  "Patch /api/articles/:article_id/": {
+    "description": "update article by aticle_id",
+    "queries": [],
+    "exampleResponse": {
+      "article": [
+        {
+          "body": "Ambidextrous marsupial",
+          "votes": 0,
+          "author": "icellusedkars",
+          "article_id": 3,
+          "created_at": 1600560600000
+        },
+        {
+          "body": "Ambidextrous marsupial",
+          "votes": 5,
+          "author": "icellusedkars",
+          "article_id": 3,
+          "created_at": 1600560600000
+        }
+
+      ]
+    }
+  },
+  "delete /api/comments/:comment_id/": {
+    "description": "delete comment by comment_id",
+    "queries": [],
+    "exampleResponse": {
+      "comment": []
+    }
   }
 }
