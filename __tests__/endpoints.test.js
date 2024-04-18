@@ -197,6 +197,18 @@ describe('Patch: /api/articles/:article_id', () => {
             expect(msg).toBe('Bad request')
         })
     })
+    test(`400 with message "Bad request" if inc_votes is not a number`, () => {
+        const patchObj = {
+            inc_votes: 'abc'
+        }
+        return request(app).patch('/api/articles/abcd').send(patchObj)
+        .expect(400)
+        .then((res) => {
+            const { msg } = res.body
+            expect(msg).toBe('Bad request')
+        })
+    })
+    
 })
 describe(`delete  /api/comments/:comment_id`, () => {
     test(`204 with no content after the comment has been deleted`, () => {
