@@ -119,6 +119,8 @@ describe('/api/articles/:article_id/comments', () => {
             expect(msg).toBe('Bad request')
         })
     })
+})
+describe(`Post: /api/articles/:article_id/comments`,() => {
     test(`201 with a response object of the posted comment`, () => {
         const sentComment = {
             username: `lurker`,
@@ -136,6 +138,50 @@ describe('/api/articles/:article_id/comments', () => {
             expect(typeof newComment.created_at).toBe('string')
         })
     })
+    test(`201 with a response object of the posted comment. Ignores any other properties of the object except for username and body`, () => {
+        const sentComment = {
+            username: `lurker`,
+            body: `I like krabby patties`,
+            height: '6ft'
+        };
+        return request(app)
+        .post("/api/articles/3/comments").send(sentComment)
+        .expect(201)
+        .then((res) => {
+            const { newComment } = res.body
+            expect(typeof newComment.body).toBe('string')
+            expect(typeof newComment.author).toBe('string')
+            expect(typeof newComment.article_id).toBe('number')
+            expect(typeof newComment.votes).toBe('number')
+            expect(typeof newComment.created_at).toBe('string')
+        })
+    })
+    test(`400 with a message Bad request if article_id is not valid`, () => {
+        const sentComment = {
+            username: `lurker`,
+            body: `I like krabby patties`
+        };
+        return request(app)
+        .post("/api/articles/abcd/comments").send(sentComment)
+        .expect(400)
+        .then((res) => {
+            const { msg } = res.body
+            expect(msg).toBe('Bad request')
+        })
+    })
+    test(`404 with a message of not found if article_id is not found`, () => {
+        const sentComment = {
+            username: `lurker`,
+            body: `I like krabby patties`
+        };
+        return request(app)
+        .post("/api/articles/9999/comments").send(sentComment)
+        .expect(404)
+        .then((res) => {
+            const { msg } = res.body
+            expect(msg).toBe('not found')
+        })
+    })
     test(`404 with a message of Author not found if username is not valid`, () => {
         const sentComment = {
             username: `spondebob`,
@@ -146,7 +192,7 @@ describe('/api/articles/:article_id/comments', () => {
         .expect(404)
         .then((res) => {
             const { msg } = res.body
-            expect(msg).toBe('Author not found')
+            expect(msg).toBe('not found')
         })
     })
 })

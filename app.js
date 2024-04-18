@@ -28,7 +28,7 @@ app.use((err, request, response, next) => {
 })
 app.use((err, request, response, next) => {
   if(err.code === '23503'){
-    response.status(404).send({msg: 'Author not found'})
+    response.status(404).send({msg: 'not found'})
   }
   next(err)
 })
