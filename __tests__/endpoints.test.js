@@ -51,6 +51,7 @@ describe("/api/articles/:article_id", () => {
             expect(typeof article.body).toBe('string');
             expect(typeof article.votes).toBe("number");
             expect(typeof article.article_img_url).toBe("string");
+            expect(typeof article.comment_count).toBe('string')
         })
     })
     test('Get 400 and a message for bad request if the the id is invalid', () => {
