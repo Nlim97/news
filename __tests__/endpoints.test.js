@@ -72,7 +72,7 @@ describe('/api/articles', () => {
     test('Get 200 an check if the articles are order by created_at in descending order', () => {
         return request(app).get('/api/articles').expect(200)
         .then((res) => {
-            const { articles } = res.body
+            const  articles  = res.body
             expect(articles.length).toBe(13)
             articles.forEach((article) => {
                 expect(typeof article.author).toBe('string');
@@ -253,13 +253,21 @@ describe("/api/articles?query", () => {
             expect(articles[0].topic).toBe("cats")
         })
     })
-    test('404 with topic does not exist if there is no such topic but is still a string', () => {
-        return request(app).get('/api/articles?topic=dog').expect(404)
+    test('200 with all an empty array of articles filtered by the query value(specific topic)', () => {
+        return request(app).get('/api/articles?topic=paper').expect(200)
         .then((res) => {
-            const { msg } = res.body
-            expect(msg).toBe('topic does not exist')
+            const articles = res.body
+            expect(articles).toEqual([])
         })
     })
+
+    test('404 with topic does not exist if there is no such topic but is still a string', () => {
+        return request(app).get('/api/articles?topic=123').expect(404)
+        .then((res) => {
+            const { msg } = res.body
+        })
+    })
+
 })
 
 

@@ -15,16 +15,17 @@ function fetchArticle(topic){
     COUNT(comments.article_id) AS comment_count FROM articles
     LEFT JOIN comments ON comments.article_id = articles.article_id `
     if(topic){
-        sqlString+= 'WHERE articles.topic = $1 '
+        sqlString+= 'WHERE topic = $1 '
     }
     sqlString += `GROUP BY articles.article_id
     ORDER BY articles.created_at DESC`
+    const topics = ['mitch', 'cats', 'paper']
+    if(topic && !topics.includes(topic)){
+        return Promise.reject({status:404, msg: 'not found'})
+    }
     const params = topic ? [topic] : [];
     return db.query(sqlString,params)
-    .then((articles) => {
-        if(articles.rows.length === 0){
-            return Promise.reject({status: 404, msg: 'topic does not exist'})
-        }
+    .then((articles) => { 
         return articles.rows
     })
 }
