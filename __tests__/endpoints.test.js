@@ -265,6 +265,7 @@ describe("/api/articles?query", () => {
         return request(app).get('/api/articles?topic=123').expect(404)
         .then((res) => {
             const { msg } = res.body
+            expect(msg).toBe('not found')
         })
     })
 
