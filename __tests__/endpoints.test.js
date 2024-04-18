@@ -198,6 +198,28 @@ describe('Patch: /api/articles/:article_id', () => {
         })
     })
 })
+describe(`delete  /api/comments/:comment_id`, () => {
+    test(`204 with no content after the comment has been deleted`, () => {
+        return request(app).delete(`/api/comments/2`).expect(204)
+        .then((res) => {
+            expect(res.body).toEqual({})
+        })
+    })
+    test('404 with a message of no user found', () => {
+        return request(app).delete(`/api/comments/99999`).expect(404)
+        .then((res) => {
+            const { msg } = res.body
+            expect(msg).toEqual('No comment found with that id')
+        })
+    })
+    test(`400 with a message of Bad request`, () => {
+        return request(app).delete(`/api/comments/abcd`).expect(400)
+        .then((res) => {
+            const { msg } = res.body
+            expect(msg).toEqual('Bad request')
+        })
+    })
+})
 
 
 
