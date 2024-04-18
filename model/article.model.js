@@ -1,7 +1,11 @@
 const db = require("../db/connection");
 
 function fetchArticleById(num){
-    return db.query("SELECT * FROM articles WHERE article_id = $1", [num])
+    return db.query(`SELECT articles.*, COUNT(comments.article_id) AS comment_count 
+    FROM articles 
+    LEFT JOIN comments ON comments.article_id = articles.article_id 
+    WHERE articles.article_id = $1 
+    GROUP BY articles.article_id`, [num])
     .then((article) => {
         if(article.rows[0] === undefined){
             return Promise.reject({status: 404, msg: 'article does not exist'})
