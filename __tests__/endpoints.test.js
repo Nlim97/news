@@ -70,7 +70,7 @@ describe("/api/articles/:article_id", () => {
 })
 describe('/api/articles', () => {
     test('Get 200 an check if the articles are order by created_at in descending order', () => {
-        return request(app).get('/api/articles?order=desc').expect(200)
+        return request(app).get('/api/articles').expect(200)
         .then((res) => {
             const { articles } = res.body
             expect(articles.length).toBe(13)
@@ -241,6 +241,23 @@ describe("/api/users", () => {
                 expect(typeof user.name).toBe('string')
                 expect(typeof user.avatar_url).toBe('string')
             })
+        })
+    })
+})
+describe("/api/articles?query", () => {
+    test('200 with all an array of articles filtered by the query value(specific topic)', () => {
+        return request(app).get('/api/articles?topic=cats').expect(200)
+        .then((res) => {
+            const articles = res.body
+            expect(articles.length).toBe(1)
+            expect(articles[0].topic).toBe("cats")
+        })
+    })
+    test('404 with topic does not exist if there is no such topic but is still a string', () => {
+        return request(app).get('/api/articles?topic=dog').expect(404)
+        .then((res) => {
+            const { msg } = res.body
+            expect(msg).toBe('topic does not exist')
         })
     })
 })
