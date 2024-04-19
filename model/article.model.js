@@ -14,7 +14,7 @@ function fetchArticleById(num){
     })
 }
 
-function fetchArticle(topic){
+function fetchArticle(order='desc',sort_by='created_at', topic){
     let sqlString = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, 
     COUNT(comments.article_id) AS comment_count FROM articles
     LEFT JOIN comments ON comments.article_id = articles.article_id `
@@ -22,10 +22,15 @@ function fetchArticle(topic){
         sqlString+= 'WHERE topic = $1 '
     }
     sqlString += `GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC`
+    ORDER BY articles.${sort_by} ${order.toUpperCase()}`
+    console.log(sqlString)
     const topics = ['mitch', 'cats', 'paper']
     if(topic && !topics.includes(topic)){
         return Promise.reject({status:404, msg: 'not found'})
+    }
+    const orderBy = ['desc', 'asc']
+    if(!orderBy.includes(order)){
+        return Promise.reject({status:400, msg: 'Bad request'})
     }
     const params = topic ? [topic] : [];
     return db.query(sqlString,params)

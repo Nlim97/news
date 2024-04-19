@@ -12,12 +12,22 @@ function getArticleById(request, response, next){
 
 function getArticle(request, response, next){
     const { topic } = request.query
-    fetchArticle(topic).then((articles) => {
-        response.status(200).send(articles)
-    }).catch((err) => {
-        next(err)
-    })
-    
+    const { order } = request.query
+    const { sort_by } = request.query
+    console.log()
+    if(topic || order || sort_by){
+        fetchArticle(order, sort_by, topic).then((articles) => {
+            response.status(200).send(articles)
+        }).catch((err) => {
+             next(err)
+        })
+    }else{
+        fetchArticle().then((articles) => {
+            response.status(200).send(articles)
+        }).catch((err) => {
+            next(err)
+        }) 
+    } 
 }
 
 function patchArticleById(request, response, next){
