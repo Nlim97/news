@@ -88,6 +88,34 @@ describe('/api/articles', () => {
             })
         })
     })
+    test('Get 200 and articles can be ordered ascending', () =>{
+        return request(app).get('/api/articles?order=asc').expect(200)
+        .then((res) => {
+            const  articles  = res.body
+            expect(articles).toBeSortedBy('created_at', { ascending: true });
+        })
+    })
+    test('Get 200 and articles are sorted by article votes descending', () => {
+        return request(app).get('/api/articles?sort_by=votes').expect(200)
+        .then((res) => {
+            const articles = res.body 
+            expect(articles).toBeSortedBy('votes', { descending: true });
+        })
+    })
+    test('404 if an in valid query is passed with a message of column not found', () => {
+        return request(app).get('/api/articles?sort_by=hello').expect(404)
+        .then((res) => {
+            const { msg } = res.body
+            expect(msg).toBe('Column not found')
+        })
+    })
+    test('400 if the order query is not asc or desc', () => {
+        return request(app).get('/api/articles?order=bye').expect(400)
+        .then((res) => {
+            const { msg } = res.body
+            expect(msg).toBe('Bad request')
+        })
+    })
 })
 describe('/api/articles/:article_id/comments', () => {
     test('200 with all the comment in ascending order related to the article.article_id', () => {
@@ -317,6 +345,7 @@ describe("/api/articles?query", () => {
     })
 
 })
+
 
 
 
