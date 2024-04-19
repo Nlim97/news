@@ -38,7 +38,7 @@
     }
   },
   "GET /api/articles/:article_id": {
-    "description": "serves an article from the articles table by using the parametric endpoint",
+    "description": "serves an article from the articles table by using the article id",
     "queries": [],
     "exampleResponse": {
       "article": {
@@ -76,7 +76,7 @@
     }
   },
   "Patch /api/articles/:article_id/": {
-    "description": "update article by aticle_id",
+    "description": "update article votes by aticle_id",
     "queries": [],
     "exampleResponse": {
       "article": [
