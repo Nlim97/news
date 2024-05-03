@@ -4,8 +4,9 @@ const { getDescription } = require("./controller/description-controller")
 const { getArticleById, getArticle, patchArticleById } = require("./controller/article-controller")
 const {getCommentsByArticleId, postCommentByArticleId, deleteCommentById} = require("./controller/comments-controller")
 const { getUsers } = require('./controller/users-controller')
+const cors = require('cors')
 const app = express();
-
+app.use(cors())
 app.use(express.json())
 
 app.get("/api", getDescription);
