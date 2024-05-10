@@ -24,7 +24,7 @@ function fetchArticle(order='desc',sort_by='created_at', topic){
     sqlString += `GROUP BY articles.article_id
     ORDER BY articles.${sort_by} ${order.toUpperCase()}`
     console.log(sqlString)
-    const topics = ['mitch', 'cats', 'paper', 'cooking', 'coding']
+    const topics = ['mitch', 'cats', 'paper', 'cooking', 'coding', 'football']
     if(topic && !topics.includes(topic)){
         return Promise.reject({status:404, msg: 'not found'})
     }

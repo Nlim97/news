@@ -160,6 +160,7 @@ describe(`Post: /api/articles/:article_id/comments`,() => {
         .expect(201)
         .then((res) => {
             const { newComment } = res.body
+            console.log(newComment)
             expect(typeof newComment.body).toBe('string')
             expect(typeof newComment.author).toBe('string')
             expect(typeof newComment.article_id).toBe('number')
@@ -213,7 +214,7 @@ describe(`Post: /api/articles/:article_id/comments`,() => {
     })
     test(`404 with a message of Author not found if username is not valid`, () => {
         const sentComment = {
-            username: `spondebob`,
+            username: `koko`,
             body: `I like krabby patties`
         };
         return request(app)
@@ -221,6 +222,7 @@ describe(`Post: /api/articles/:article_id/comments`,() => {
         .expect(404)
         .then((res) => {
             const { msg } = res.body
+            console.log(res)
             expect(msg).toBe('not found')
         })
     })
